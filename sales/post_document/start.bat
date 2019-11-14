@@ -1,0 +1,1 @@
+java -jar target\fin2-sales-post-0.0.1-SNAPSHOT.jar

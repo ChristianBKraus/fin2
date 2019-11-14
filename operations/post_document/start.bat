@@ -1,0 +1,1 @@
+java -jar target\fin2-operations-post-0.0.1-SNAPSHOT.jar

@@ -1,0 +1,29 @@
+server.port: 8081
+spring.cloud.stream:
+  bindings:
+    process-in-0:
+      destination: input
+    process-out-0:
+      destination: SalesDocument
+  kafka:
+    streams:
+      binder:
+        applicationId: Fin2SalesPost
+        configuration:
+          commit.interval.ms: 100
+          default:
+            key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+            value.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+#Enable metrics
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS
+  endpoints:
+    web:
+      exposure:
+        include: metrics,health
+#Enable logging to debug for spring kafka config
+logging:
+  level:
+    org.springframework.kafka.config: debug
