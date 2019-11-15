@@ -10,7 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class Mapper {
+class Mapper {
+    private static long nextId = 0L;
+    private long nextId() {
+        nextId++;
+        return nextId;
+    }
+
     OperationsDocument map(SalesDocument salesDoc) {
 
         List<OperationsDocumentItem> items = new ArrayList<>();
@@ -34,6 +40,7 @@ public class Mapper {
         customer_item.setAmount(amount);
 
         return OperationsDocument.builder()
+                .operationsDocumentId(nextId())
                 .documentDate(salesDoc.getDocumentDate())
                 .salesDocumentId(salesDoc.getSalesDocumentId())
                 .items(items)

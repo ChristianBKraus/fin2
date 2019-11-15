@@ -15,8 +15,7 @@ import java.util.function.Function;
 @Component
 public class Processor {
 
-    public static final String INPUT_TOPIC = "input";
-    public static final String OUTPUT_TOPIC = "SalesDocument";
+    private static long nextId = 0L;
 
     @Bean
     public Function<KStream<String, String>, KStream<String, SalesDocument>> process() {
@@ -26,23 +25,31 @@ public class Processor {
 
                 .map( (key, value) -> {
 
-                    long amount = Long.parseLong(value);
                     List<SalesDocumentItem> items = new ArrayList<>();
                     items.add( SalesDocumentItem.builder()
                                 .salesDocumentLine(1)
-                                .product("Product")
-                                .amount(amount)
+                                .product(value)
+                                .amount(100L)
                                 .build() );
                     SalesDocument doc = SalesDocument.builder()
+                            .salesDocumentId(nextId())
                             .documentDate(Instant.now().toString().substring(0,10))
                             .customerId("Customer")
                             .items(items)
                             .build();
 
-                        return new KeyValue<>(doc.getKey(), doc);
+                        return getKeyValue(doc);
                     } )
 
                 .peek( (key,value) -> System.out.println( "-- " + value ));
+    }
+
+    private long nextId() {
+        nextId++;
+        return nextId;
+    }
+    private KeyValue<String,SalesDocument> getKeyValue(SalesDocument doc) {
+        return new KeyValue<>(String.format("%d",doc.getSalesDocumentId()),doc);
     }
 
 }

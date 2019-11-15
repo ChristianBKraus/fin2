@@ -3,8 +3,7 @@ package fin2.model;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
-@Builder
+@Data @Builder
 public class SalesDocumentItem {
     long salesDocumentLine;
     String product;

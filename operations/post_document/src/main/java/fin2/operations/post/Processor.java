@@ -1,7 +1,6 @@
 package fin2.operations.post;
 
-import fin2.model.OperationsDocument;
-import fin2.model.SalesDocument;
+import fin2.model.*;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +21,13 @@ public class Processor {
 
         return input -> input
                 .peek( (key,value) -> System.out.println(value.toString()) )
-                .map( (key, value) -> {
-
-                        OperationsDocument doc = mapper.map(value);
-
-                        return new KeyValue<>(doc.getKey(), doc);
-                    } )
+                .map( (key, value) -> getKeyValue( mapper.map(value) ) )
                 .peek( (key,value) -> System.out.println("-- " + value.toString()));
+    }
+
+    private KeyValue<String,OperationsDocument> getKeyValue(OperationsDocument doc) {
+        String key = String.format("%d",doc.getOperationsDocumentId());
+        return new KeyValue<>(key,doc);
     }
 
 
