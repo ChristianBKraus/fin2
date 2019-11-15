@@ -18,6 +18,7 @@
     </parent>
 
     <modules>
+        <module>configuration</module>
         <module>sales</module>
         <module>operations</module>
         <module>accounting</module>
