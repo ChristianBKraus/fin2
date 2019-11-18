@@ -3,6 +3,8 @@ spring.cloud.stream:
   bindings:
     process-in-0:
       destination: input
+    process-in-1:
+      destination: SalesOrganisation
     process-out-0:
       destination: SalesDocument
   kafka:

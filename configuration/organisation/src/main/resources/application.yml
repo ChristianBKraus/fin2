@@ -2,7 +2,7 @@ server.port: 8085
 spring.cloud.stream:
   bindings:
     process-in-0:
-      destination: input
+      destination: input_org
     process-out-0:
       destination: SalesOrganisation
   kafka:

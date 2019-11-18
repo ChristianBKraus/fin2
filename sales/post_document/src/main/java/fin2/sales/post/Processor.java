@@ -2,15 +2,19 @@ package fin2.sales.post;
 
 import fin2.model.SalesDocument;
 import fin2.model.SalesDocumentItem;
-import org.apache.kafka.streams.KeyValue;
-import org.apache.kafka.streams.kstream.KStream;
+import fin2.model.SalesOrganisation;
+import fin2.serdes.SalesDocumentSerdes;
+import fin2.serdes.SalesOrganisationSerdes;
+import org.apache.kafka.common.serialization.*;
+import org.apache.kafka.streams.*;
+import org.apache.kafka.streams.kstream.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 @Component
 public class Processor {
@@ -18,11 +22,12 @@ public class Processor {
     private static long nextId = 0L;
 
     @Bean
-    public Function<KStream<String, String>, KStream<String, SalesDocument>> process() {
+    public BiFunction<KStream<String, String>, KTable<String, SalesOrganisation>, KStream<String, SalesDocument>> process() {
 
-        return input -> input
+        return (input,organisations) -> input
                 .peek( (key,value) -> System.out.println( value ))
 
+                // Create SalesOrder from ProductString
                 .map( (key, value) -> {
 
                     List<SalesDocumentItem> items = new ArrayList<>();
@@ -35,13 +40,24 @@ public class Processor {
                             .salesDocumentId(nextId())
                             .documentDate(Instant.now().toString().substring(0,10))
                             .customerId("Customer")
+                            .salesOrganisationId(1L)
                             .items(items)
                             .build();
 
                         return getKeyValue(doc);
                     } )
+                .peek( (key,value) -> System.out.println( "-1- " + value ))
 
-                .peek( (key,value) -> System.out.println( "-- " + value ));
+                // Enrich with SalesOrganization Data
+                .map( (key,value) -> new KeyValue<>(String.format("%d",value.getSalesOrganisationId()), value)  )
+                .join(organisations, (doc,org) -> {
+                            doc.setCompanyCode( org.getCompanyCode() );
+                            return doc;
+                        }
+                        ,Joined.with(Serdes.String(), new SalesDocumentSerdes(), new SalesOrganisationSerdes() )
+                         )
+                .map( (key,value) -> new KeyValue<>(String.format("%d",value.getSalesDocumentId()), value)  )
+                .peek( (key,value) -> System.out.println( "-2- " + value ));
     }
 
     private long nextId() {

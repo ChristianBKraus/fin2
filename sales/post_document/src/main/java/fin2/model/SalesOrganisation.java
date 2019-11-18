@@ -6,8 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class SalesDocumentItem {
-    long salesDocumentLine;
-    String product;
-    long amount;
+public class SalesOrganisation {
+    long salesOrganisationId;
+    String name;
+    String companyCode;
+
 }
