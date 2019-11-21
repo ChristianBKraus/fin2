@@ -1,71 +1,70 @@
 package fin2.sales.post;
 
-import fin2.model.SalesDocument;
-import fin2.model.SalesDocumentItem;
-import fin2.model.SalesOrganisation;
-import fin2.serdes.SalesDocumentSerdes;
-import fin2.serdes.SalesOrganisationSerdes;
-import org.apache.kafka.common.serialization.*;
-import org.apache.kafka.streams.*;
+import fin2.model.*;
+import fin2.serdes.*;
+import lombok.var;
+import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.*;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.cloud.stream.annotation.*;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiFunction;
-
 @Component
+@EnableBinding(IProcessor.class)
 public class Processor {
 
-    private static long nextId = 0L;
+    @Autowired ProcessorService service;
 
-    @Bean
-    public BiFunction<KStream<String, String>, KTable<String, SalesOrganisation>, KStream<String, SalesDocument>> process() {
+    @StreamListener
+    @SendTo(IProcessor.SALES_DOCUMENT)
+    public KStream<String,SalesDocument> process(
+            @Input(IProcessor.INPUT) KStream<String,String> input,
+            @Input(IProcessor.SALES_ORGANISATION) KTable<String,SalesOrganisation> organisation ){
 
-        return (input,organisations) -> input
-                .peek( (key,value) -> System.out.println( value ))
+            return input
+                .peek( (k,v) -> print("0",v) )
 
-                // Create SalesOrder from ProductString
+            // Create SalesOrder from ProductString
                 .map( (key, value) -> {
+                    var doc = service.create(value);
+                    return new KeyValue<>(getKey(doc.getSalesOrganisationId()),doc);
+                } )
 
-                    List<SalesDocumentItem> items = new ArrayList<>();
-                    items.add( SalesDocumentItem.builder()
-                                .salesDocumentLine(1)
-                                .product(value)
-                                .amount(100L)
-                                .build() );
-                    SalesDocument doc = SalesDocument.builder()
-                            .salesDocumentId(nextId())
-                            .documentDate(Instant.now().toString().substring(0,10))
-                            .customerId("Customer")
-                            .salesOrganisationId(1L)
-                            .items(items)
-                            .build();
+                .peek( (k,v) -> print("1",v) )
 
-                        return getKeyValue(doc);
-                    } )
-                .peek( (key,value) -> System.out.println( "-1- " + value ))
-
-                // Enrich with SalesOrganization Data
-                .map( (key,value) -> new KeyValue<>(String.format("%d",value.getSalesOrganisationId()), value)  )
-                .join(organisations, (doc,org) -> {
-                            doc.setCompanyCode( org.getCompanyCode() );
-                            return doc;
-                        }
+            // Enrich with SalesOrganization Data
+                .join(organisation, (doc,org) ->
+                        service.enrichBy(doc,org)
                         ,Joined.with(Serdes.String(), new SalesDocumentSerdes(), new SalesOrganisationSerdes() )
-                         )
-                .map( (key,value) -> new KeyValue<>(String.format("%d",value.getSalesDocumentId()), value)  )
-                .peek( (key,value) -> System.out.println( "-2- " + value ));
+                )
+                .map( (key,value) -> new KeyValue<>(getKey(value.getSalesDocumentId()), value)  )
+
+                .peek( (k,v) -> print("2",v) );
+
     }
 
-    private long nextId() {
-        nextId++;
-        return nextId;
-    }
-    private KeyValue<String,SalesDocument> getKeyValue(SalesDocument doc) {
-        return new KeyValue<>(String.format("%d",doc.getSalesDocumentId()),doc);
+    private void print(String prefix, Object obj) {
+        System.out.println("-"+prefix+"-: " + obj);
     }
 
+    private String getKey(long id) {
+        return String.format("%d",id);
+    }
+}
+
+interface IProcessor {
+    String INPUT = "input";
+    String SALES_DOCUMENT = "SalesDocument";
+    String SALES_ORGANISATION = "SalesOrganisation";
+
+    @Input(INPUT)
+    KStream<?,String> inputStream();
+
+    @Input(SALES_ORGANISATION)
+    KTable<String,SalesOrganisation> salesOrganisationStream();
+
+    @Output(SALES_DOCUMENT)
+    KStream<String,SalesDocument> salesDocumentStream();
 }
