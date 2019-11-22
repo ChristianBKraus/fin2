@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class SalesOrganisation {
+public class Company {
     @Id
-    String salesOrganisationId;
-    String name;
     String companyCode;
-
+    String name;
 }

@@ -10,9 +10,6 @@ import java.util.function.Function;
 
 @Component
 public class Processor {
-
-    private static long nextId = 0L;
-
     @Bean
     public Function<KStream<String, String>, KStream<String, SalesOrganisation>> process() {
 
@@ -33,12 +30,13 @@ public class Processor {
                 .peek( (key,value) -> System.out.println( "-- " + value ));
     }
 
-    private long nextId() {
+    private static long nextId;
+    private String nextId() {
         nextId++;
-        return nextId;
+        return String.format("%d",nextId);
     }
     private KeyValue<String,SalesOrganisation> getKeyValue(SalesOrganisation org) {
-        return new KeyValue<>(String.format("%d",org.getSalesOrganisationId()),org);
+        return new KeyValue<>(org.getSalesOrganisationId(),org);
     }
 
 }
