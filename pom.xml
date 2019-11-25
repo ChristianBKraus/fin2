@@ -19,6 +19,7 @@
 
     <modules>
         <module>configuration</module>
+        <module>masterdata</module>
         <module>sales</module>
         <module>operations</module>
         <module>accounting</module>

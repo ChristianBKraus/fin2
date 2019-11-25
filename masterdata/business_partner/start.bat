@@ -1,0 +1,1 @@
+java -jar target\fin2-masterdata-business-partner-0.0.1-SNAPSHOT.jar

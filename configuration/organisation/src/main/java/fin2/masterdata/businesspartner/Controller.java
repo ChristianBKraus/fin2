@@ -1,7 +1,7 @@
-package fin2.configuration.organisation;
+package fin2.masterdata.businesspartner;
 
-import fin2.configuration.organisation.repo.CompanyRepo;
-import fin2.configuration.organisation.repo.SalesOrganisationRepo;
+import fin2.masterdata.businesspartner.repo.CompanyRepo;
+import fin2.masterdata.businesspartner.repo.SalesOrganisationRepo;
 import fin2.model.Company;
 import fin2.model.SalesOrganisation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,8 @@ public class Controller {
     Service service;
 
     // ---- SalesOrganisation
-    @Autowired SalesOrganisationRepo orgRepo;
+    @Autowired
+    SalesOrganisationRepo orgRepo;
 
     @GetMapping("/sales_organisation")
     public List<SalesOrganisation> getSalesOrganisations() {
@@ -32,7 +33,8 @@ public class Controller {
     }
 
     // ---- Company
-    @Autowired CompanyRepo companyRepo;
+    @Autowired
+    CompanyRepo companyRepo;
 
     @GetMapping("/company")
     public List<Company> getCompanies() {

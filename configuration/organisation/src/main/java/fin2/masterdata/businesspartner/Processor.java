@@ -1,4 +1,4 @@
-package fin2.configuration.organisation;
+package fin2.masterdata.businesspartner;
 
 import fin2.model.*;
 import org.apache.kafka.streams.KeyValue;

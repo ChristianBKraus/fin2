@@ -1,6 +1,7 @@
-package fin2.configuration.organisation;
+package fin2.masterdata.businesspartner;
 
-import fin2.configuration.organisation.repo.*;
+import fin2.masterdata.businesspartner.repo.CompanyRepo;
+import fin2.masterdata.businesspartner.repo.SalesOrganisationRepo;
 import fin2.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
