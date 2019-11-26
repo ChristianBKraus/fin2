@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class SalesDocument {
-    long salesDocumentId;
+    String salesDocumentId;
     String documentDate;
     String customerId;
     List<SalesDocumentItem> items;

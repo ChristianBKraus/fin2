@@ -6,12 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class OperationsDocumentItem {
+public class OperationsOpenItem {
 
+    String operationsDocumentId;
     String operationsDocumentLine;
 
-    String lineType;
-    String product;
     String customerId;
 
     long amount;

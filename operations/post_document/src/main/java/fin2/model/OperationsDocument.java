@@ -5,8 +5,12 @@ import java.util.List;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class OperationsDocument {
-    long operationsDocumentId;
+    String operationsDocumentId;
+
     String documentDate;
-    long salesDocumentId;
+    String documentType;
+
+    String salesDocumentId;
+
     List<OperationsDocumentItem> items;
 }

@@ -1,28 +1,27 @@
 package fin2.operations.post;
 
-import fin2.model.OperationsDocument;
-import fin2.model.OperationsDocumentItem;
-import fin2.model.SalesDocument;
-import fin2.model.SalesDocumentItem;
+import fin2.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-class Mapper {
+class OperationsPostMapper {
+
     private static long nextId = 0L;
-    private long nextId() {
+    private String nextId() {
         nextId++;
-        return nextId;
+        return String.format("%d",nextId);
     }
+    private String line(long line) { return String.format("%d",line); }
 
     OperationsDocument map(SalesDocument salesDoc) {
 
         List<OperationsDocumentItem> items = new ArrayList<>();
         // Customer Line
         OperationsDocumentItem customer_item = OperationsDocumentItem.builder()
-                .operationsDocumentLine(1)
+                .operationsDocumentLine(line(1))
                 .customerId(salesDoc.getCustomerId())
                 .build();
         items.add(customer_item);
@@ -31,7 +30,7 @@ class Mapper {
         for (SalesDocumentItem salesItem : salesDoc.getItems()) {
             index++;
             items.add( OperationsDocumentItem.builder()
-                    .operationsDocumentLine(index)
+                    .operationsDocumentLine(line(index))
                     .product(salesItem.getProduct())
                     .amount((salesItem.getAmount()))
                     .build() );
@@ -46,5 +45,17 @@ class Mapper {
                 .items(items)
                 .build();
 
+    }
+
+    List<OperationsOpenItem> map(OperationsDocument doc) {
+        List<OperationsOpenItem> items = new ArrayList<>();
+        for (OperationsDocumentItem item : doc.getItems()) {
+            if (item.getLineType().equals("Customer")) {
+                items.add(OperationsOpenItem.builder().operationsDocumentId(doc.getOperationsDocumentId())
+                        .operationsDocumentLine(item.getOperationsDocumentLine()).customerId(item.getCustomerId())
+                        .amount(item.getAmount()).currency(item.getCurrency()).build());
+            }
+        }
+        return items;
     }
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class SalesDocumentItem {
-    long salesDocumentLine;
+    String salesDocumentLine;
     String product;
     long amount;
 }
