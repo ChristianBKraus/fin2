@@ -7,16 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-class OperationsPostMapper {
+class OperationsPostService {
 
-    private static long nextId = 0L;
-    private String nextId() {
-        nextId++;
-        return String.format("%d",nextId);
-    }
-    private String line(long line) { return String.format("%d",line); }
-
-    OperationsDocument map(SalesDocument salesDoc) {
+    OperationsDocument toDocument(SalesDocument salesDoc) {
 
         List<OperationsDocumentItem> items = new ArrayList<>();
         // Customer Line
@@ -47,7 +40,7 @@ class OperationsPostMapper {
 
     }
 
-    List<OperationsOpenItem> map(OperationsDocument doc) {
+    List<OperationsOpenItem> toOpenItems(OperationsDocument doc) {
         List<OperationsOpenItem> items = new ArrayList<>();
         for (OperationsDocumentItem item : doc.getItems()) {
             if (item.getLineType().equals("Customer")) {
@@ -58,4 +51,12 @@ class OperationsPostMapper {
         }
         return items;
     }
+
+    private static long nextId = 0L;
+    private String nextId() {
+        nextId++;
+        return String.format("%d",nextId);
+    }
+    private String line(long line) { return String.format("%d",line); }
+
 }
