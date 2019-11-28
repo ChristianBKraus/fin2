@@ -13,10 +13,12 @@ import java.util.List;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class SalesDocument {
-    long salesDocumentId;
+    String salesDocumentId;
+
     String documentDate;
     String customerId;
-    long salesOrganisationId;
+    String salesOrganisationId;
     String companyCode;
+
     List<SalesDocumentItem> items;
 }

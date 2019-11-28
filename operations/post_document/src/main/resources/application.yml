@@ -1,14 +1,21 @@
 server.port: 8083
+spring.cloud.function.definition: createDocument;createOpenItem
 spring.cloud.stream:
+  kafka.streams.bindings:
+    createDocument_in.applicationId: Fin2OperationsPostDocument
+    createOpenItem_in.applicationId: Fin2OperationsPostOpenItem
   bindings:
-    process-in-0:
+    createDocument-in-0:
       destination: SalesDocument
-    process-out-0:
+    createDocument-out-0:
       destination: OperationsDocument
+    createOpenItem-in-0:
+      destination: OperationsDocument
+    createOpenItem-out-0:
+      destination: OpenItem
   kafka:
     streams:
       binder:
-        applicationId: Fin2OperationsPost
         configuration:
           commit.interval.ms: 100
           default:

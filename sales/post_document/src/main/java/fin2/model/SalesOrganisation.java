@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class SalesOrganisation {
-    long salesOrganisationId;
+    String salesOrganisationId;
+
     String name;
     String companyCode;
 

@@ -43,6 +43,7 @@ class OperationsPostService {
     List<OperationsOpenItem> toOpenItems(OperationsDocument doc) {
         List<OperationsOpenItem> items = new ArrayList<>();
         for (OperationsDocumentItem item : doc.getItems()) {
+            System.out.println("-----" + item);
             if (item.getLineType().equals("Customer")) {
                 items.add(OperationsOpenItem.builder().operationsDocumentId(doc.getOperationsDocumentId())
                         .operationsDocumentLine(item.getOperationsDocumentLine()).customerId(item.getCustomerId())

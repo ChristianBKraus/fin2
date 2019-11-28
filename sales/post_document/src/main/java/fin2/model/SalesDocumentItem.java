@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class SalesDocumentItem {
-    long salesDocumentLine;
+    String salesDocumentLine;
+
     String product;
+
     long amount;
+    String currency;
 }

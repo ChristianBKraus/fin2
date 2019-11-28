@@ -12,50 +12,42 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
 @Component
-@EnableBinding(IProcessor.class)
+@EnableBinding(ISalesPostProcessor.class)
 public class Processor {
 
     @Autowired ProcessorService service;
 
     @StreamListener
-    @SendTo(IProcessor.SALES_DOCUMENT)
+    @SendTo(ISalesPostProcessor.SALES_DOCUMENT)
     public KStream<String,SalesDocument> process(
-            @Input(IProcessor.INPUT) KStream<String,String> input,
-            @Input(IProcessor.SALES_ORGANISATION) KTable<String,SalesOrganisation> organisation ){
+            @Input(ISalesPostProcessor.INPUT) KStream<String,String> input,
+            @Input(ISalesPostProcessor.SALES_ORGANISATION) KTable<String,SalesOrganisation> organisation ){
 
             return input
-                .peek( (k,v) -> print("0",v) )
+                .peek( (k,v) -> print("-0-"+v) )
 
             // Create SalesOrder from ProductString
-                .map( (key, value) -> {
-                    var doc = service.create(value);
-                    return new KeyValue<>(getKey(doc.getSalesOrganisationId()),doc);
-                } )
-
-                .peek( (k,v) -> print("1",v) )
+                .mapValues( (k,v) -> service.create(v) )
+                .selectKey( (k,v) -> v.getSalesOrganisationId() )
+                .peek( (k,v) -> print("-1-"+v) )
 
             // Enrich with SalesOrganization Data
                 .join(organisation, (doc,org) ->
                         service.enrichBy(doc,org)
                         ,Joined.with(Serdes.String(), new SalesDocumentSerdes(), new SalesOrganisationSerdes() )
                 )
-                .map( (key,value) -> new KeyValue<>(getKey(value.getSalesDocumentId()), value)  )
+                .selectKey( (k,v) -> v.getSalesDocumentId() )
 
-                .peek( (k,v) -> print("2",v) );
-
+                .peek( (k,v) -> print("-2-"+v) );
     }
 
-
-    private void print(String prefix, Object obj) {
-        System.out.println("-"+prefix+"-: " + obj);
+    private void print(String s) {
+        System.out.println(s);
     }
 
-    private String getKey(long id) {
-        return String.format("%d",id);
-    }
 }
 
-interface IProcessor {
+interface ISalesPostProcessor {
     String INPUT = "input";
     String SALES_DOCUMENT = "SalesDocument";
     String SALES_ORGANISATION = "SalesOrganisation";
