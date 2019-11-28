@@ -18,8 +18,14 @@ class OperationsPostService {
         // Customer Line
         OperationsDocumentItem customer_item = OperationsDocumentItem.builder()
                 .operationsDocumentLine(line(1))
+
+                // Sales
                 .customerId(salesDoc.getCustomerId())
+                .companyCode(salesDoc.getCompanyCode())
+
+                // Operations
                 .lineType(LineItemType.Customer.toString())
+
                 .build();
         items.add(customer_item);
         long index = 1;
@@ -28,9 +34,17 @@ class OperationsPostService {
             index++;
             items.add( OperationsDocumentItem.builder()
                     .operationsDocumentLine(line(index))
-                    .lineType(LineItemType.Cost.toString())
+
+                    // Sales
+                    .salesDocumentLine(salesItem.getSalesDocumentLine())
                     .product(salesItem.getProduct())
+                    .salesOrganisationId(salesDoc.getSalesOrganisationId())
+                    .companyCode(salesDoc.getCompanyCode())
                     .amount((salesItem.getAmount()))
+
+                    // Operations
+                    .lineType(LineItemType.Cost.toString())
+
                     .build() );
             amount += salesItem.getAmount();
         }
@@ -38,10 +52,16 @@ class OperationsPostService {
 
         return OperationsDocument.builder()
                 .operationsDocumentId(nextId())
-                .documentType(DocumentType.SalesOrder.toString())
-                .documentDate(salesDoc.getDocumentDate())
+
+                // Sales
                 .salesDocumentId(salesDoc.getSalesDocumentId())
+                .documentDate(salesDoc.getDocumentDate())
                 .currency(salesDoc.getCurrency())
+
+                // Operations
+                .documentType(DocumentType.SalesOrder.toString())
+                .postingDate((salesDoc.getDocumentDate()))
+
                 .items(items)
                 .build();
 
@@ -54,11 +74,20 @@ class OperationsPostService {
                 if (item.getLineType() != null) {
                     if (item.getLineType().equals(LineItemType.Customer.toString())) {
                         var op = OperationsOpenItem.builder()
+
+                                // Header
                                 .operationsDocumentId(doc.getOperationsDocumentId())
+                                .documentType(doc.getDocumentType())
+                                .documentDate(doc.getDocumentDate())
+                                .postingDate(doc.getPostingDate())
+                                .currency(doc.getCurrency())
+
+                                // Item
                                 .operationsDocumentLine(item.getOperationsDocumentLine())
+                                .lineType(item.getLineType())
                                 .customerId(item.getCustomerId())
                                 .amount(item.getAmount())
-                                .currency(doc.getCurrency())
+
                                 .build();
                         items.add(op);
                     }

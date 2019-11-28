@@ -7,11 +7,15 @@ import java.util.List;
 public class OperationsDocument {
     String operationsDocumentId;
 
-    String documentDate;
-    String documentType;
-
+    // Sales
     String salesDocumentId;
+    String documentDate;
     String currency;
+
+    // Operations
+    String documentType;
+    String postingDate;
+
 
     List<OperationsDocumentItem> items;
 }

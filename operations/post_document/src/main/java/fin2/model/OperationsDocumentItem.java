@@ -7,12 +7,17 @@ import lombok.NoArgsConstructor;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class OperationsDocumentItem {
-
     String operationsDocumentLine;
 
-    String lineType;
+    // Sales
+    String salesDocumentLine;
     String product;
     String customerId;
-
+    String salesOrganisationId;
+    String companyCode;
     long amount;
+
+    // Operations
+    String lineType;
+
 }

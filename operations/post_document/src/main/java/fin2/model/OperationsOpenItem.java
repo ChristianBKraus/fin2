@@ -8,11 +8,16 @@ import lombok.NoArgsConstructor;
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class OperationsOpenItem {
 
+    // Header
     String operationsDocumentId;
-    String operationsDocumentLine;
-
-    String customerId;
-
-    long amount;
+    String documentType;
+    String documentDate;
+    String postingDate;
     String currency;
+
+    // Item
+    String operationsDocumentLine;
+    String lineType;
+    String customerId;
+    long amount;
 }
