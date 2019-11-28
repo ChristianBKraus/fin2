@@ -9,5 +9,7 @@ public class SalesDocument {
     String salesDocumentId;
     String documentDate;
     String customerId;
+    String currency;
+
     List<SalesDocumentItem> items;
 }

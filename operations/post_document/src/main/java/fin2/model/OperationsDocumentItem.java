@@ -15,5 +15,4 @@ public class OperationsDocumentItem {
     String customerId;
 
     long amount;
-    String currency;
 }

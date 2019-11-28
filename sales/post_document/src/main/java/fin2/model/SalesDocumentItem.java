@@ -12,5 +12,4 @@ public class SalesDocumentItem {
     String product;
 
     long amount;
-    String currency;
 }

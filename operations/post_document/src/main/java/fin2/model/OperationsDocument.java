@@ -11,6 +11,7 @@ public class OperationsDocument {
     String documentType;
 
     String salesDocumentId;
+    String currency;
 
     List<OperationsDocumentItem> items;
 }

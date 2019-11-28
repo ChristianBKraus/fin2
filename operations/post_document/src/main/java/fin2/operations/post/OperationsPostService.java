@@ -1,6 +1,7 @@
 package fin2.operations.post;
 
 import fin2.model.*;
+import lombok.var;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,8 +36,10 @@ class OperationsPostService {
 
         return OperationsDocument.builder()
                 .operationsDocumentId(nextId())
+                .documentType("SalesOrder")
                 .documentDate(salesDoc.getDocumentDate())
                 .salesDocumentId(salesDoc.getSalesDocumentId())
+                .currency(salesDoc.getCurrency())
                 .items(items)
                 .build();
 
@@ -48,8 +51,14 @@ class OperationsPostService {
             for (OperationsDocumentItem item : doc.getItems()) {
                 if (item.getLineType() != null) {
                     if (item.getLineType().equals("Customer")) {
-                        items.add(OperationsOpenItem.builder().operationsDocumentId(doc.getOperationsDocumentId()).operationsDocumentLine(item.getOperationsDocumentLine())
-                                .customerId(item.getCustomerId()).amount(item.getAmount()).currency(item.getCurrency()).build());
+                        var op = OperationsOpenItem.builder()
+                                .operationsDocumentId(doc.getOperationsDocumentId())
+                                .operationsDocumentLine(item.getOperationsDocumentLine())
+                                .customerId(item.getCustomerId())
+                                .amount(item.getAmount())
+                                .currency(doc.getCurrency())
+                                .build();
+                        items.add(op);
                     }
                 }
             }

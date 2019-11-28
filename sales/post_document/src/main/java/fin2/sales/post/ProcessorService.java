@@ -27,13 +27,13 @@ class ProcessorService {
                 .salesDocumentLine(line(1))
                 .product(input)
                 .amount(100L)
-                .currency("EUR")
                 .build() );
         return SalesDocument.builder()
                 .salesDocumentId(nextId())
                 .documentDate(Instant.now().toString().substring(0,10))
                 .customerId("Customer")
                 .salesOrganisationId("1")
+                .currency("EUR")
                 .items(items)
                 .build();
     }

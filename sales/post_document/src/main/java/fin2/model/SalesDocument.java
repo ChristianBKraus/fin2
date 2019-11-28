@@ -19,6 +19,7 @@ public class SalesDocument {
     String customerId;
     String salesOrganisationId;
     String companyCode;
+    String currency;
 
     List<SalesDocumentItem> items;
 }
