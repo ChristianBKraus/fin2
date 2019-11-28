@@ -24,7 +24,7 @@ class OperationsPostService {
                 .companyCode(salesDoc.getCompanyCode())
 
                 // Operations
-                .lineType(LineItemType.Customer.toString())
+                .lineType(LineItemType.Customer.name())
 
                 .build();
         items.add(customer_item);
@@ -43,7 +43,7 @@ class OperationsPostService {
                     .amount((salesItem.getAmount()))
 
                     // Operations
-                    .lineType(LineItemType.Cost.toString())
+                    .lineType(LineItemType.Cost.name())
 
                     .build() );
             amount += salesItem.getAmount();
@@ -59,7 +59,7 @@ class OperationsPostService {
                 .currency(salesDoc.getCurrency())
 
                 // Operations
-                .documentType(DocumentType.SalesOrder.toString())
+                .documentType(DocumentType.SalesOrder.name())
                 .postingDate((salesDoc.getDocumentDate()))
 
                 .items(items)
@@ -72,7 +72,7 @@ class OperationsPostService {
         if (doc.getItems() != null) {
             for (OperationsDocumentItem item : doc.getItems()) {
                 if (item.getLineType() != null) {
-                    if (item.getLineType().equals(LineItemType.Customer.toString())) {
+                    if (item.getLineType().equals(LineItemType.Customer.name())) {
                         var op = OperationsOpenItem.builder()
 
                                 // Header
