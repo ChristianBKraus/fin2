@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fin2.model.EOperations.*;
+
 @Service
 class OperationsPostService {
 
@@ -17,7 +19,7 @@ class OperationsPostService {
         OperationsDocumentItem customer_item = OperationsDocumentItem.builder()
                 .operationsDocumentLine(line(1))
                 .customerId(salesDoc.getCustomerId())
-                .lineType("Customer")
+                .lineType(LineItemType.Customer.toString())
                 .build();
         items.add(customer_item);
         long index = 1;
@@ -26,7 +28,7 @@ class OperationsPostService {
             index++;
             items.add( OperationsDocumentItem.builder()
                     .operationsDocumentLine(line(index))
-                    .lineType("Cost")
+                    .lineType(LineItemType.Cost.toString())
                     .product(salesItem.getProduct())
                     .amount((salesItem.getAmount()))
                     .build() );
@@ -36,7 +38,7 @@ class OperationsPostService {
 
         return OperationsDocument.builder()
                 .operationsDocumentId(nextId())
-                .documentType("SalesOrder")
+                .documentType(DocumentType.SalesOrder.toString())
                 .documentDate(salesDoc.getDocumentDate())
                 .salesDocumentId(salesDoc.getSalesDocumentId())
                 .currency(salesDoc.getCurrency())
@@ -50,7 +52,7 @@ class OperationsPostService {
         if (doc.getItems() != null) {
             for (OperationsDocumentItem item : doc.getItems()) {
                 if (item.getLineType() != null) {
-                    if (item.getLineType().equals("Customer")) {
+                    if (item.getLineType().equals(LineItemType.Customer.toString())) {
                         var op = OperationsOpenItem.builder()
                                 .operationsDocumentId(doc.getOperationsDocumentId())
                                 .operationsDocumentLine(item.getOperationsDocumentLine())
