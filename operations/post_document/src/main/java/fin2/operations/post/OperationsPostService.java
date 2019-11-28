@@ -16,6 +16,7 @@ class OperationsPostService {
         OperationsDocumentItem customer_item = OperationsDocumentItem.builder()
                 .operationsDocumentLine(line(1))
                 .customerId(salesDoc.getCustomerId())
+                .lineType("Customer")
                 .build();
         items.add(customer_item);
         long index = 1;
@@ -24,6 +25,7 @@ class OperationsPostService {
             index++;
             items.add( OperationsDocumentItem.builder()
                     .operationsDocumentLine(line(index))
+                    .lineType("Cost")
                     .product(salesItem.getProduct())
                     .amount((salesItem.getAmount()))
                     .build() );
@@ -42,12 +44,14 @@ class OperationsPostService {
 
     List<OperationsOpenItem> toOpenItems(OperationsDocument doc) {
         List<OperationsOpenItem> items = new ArrayList<>();
-        for (OperationsDocumentItem item : doc.getItems()) {
-            System.out.println("-----" + item);
-            if (item.getLineType().equals("Customer")) {
-                items.add(OperationsOpenItem.builder().operationsDocumentId(doc.getOperationsDocumentId())
-                        .operationsDocumentLine(item.getOperationsDocumentLine()).customerId(item.getCustomerId())
-                        .amount(item.getAmount()).currency(item.getCurrency()).build());
+        if (doc.getItems() != null) {
+            for (OperationsDocumentItem item : doc.getItems()) {
+                if (item.getLineType() != null) {
+                    if (item.getLineType().equals("Customer")) {
+                        items.add(OperationsOpenItem.builder().operationsDocumentId(doc.getOperationsDocumentId()).operationsDocumentLine(item.getOperationsDocumentLine())
+                                .customerId(item.getCustomerId()).amount(item.getAmount()).currency(item.getCurrency()).build());
+                    }
+                }
             }
         }
         return items;
