@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class Material { // TODO
+public class Material {
     @Id
     String id;
     String name;
-    long price; // TODO
-    String currency; //TODO
+    long price;
+    String currency;
 }

@@ -1,11 +1,11 @@
-package fin2.masterdata.businesspartner;
+package fin2.masterdata.material;
 
-import fin2.model.*;
+import fin2.model.Material;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class BusinessPartnerService {
+class MaterialService {
     private static long nextId;
     private String nextId() {
         nextId++;
@@ -13,14 +13,14 @@ class BusinessPartnerService {
     }
 
     @Autowired
-    BusinessPartnerRepo repo;
+    MaterialRepo repo;
 
 
-    BusinessPartner post(BusinessPartner partner)  {
+    Material post(Material material)  {
 
-        partner.setId(nextId());
-        partner = repo.save(partner);
+        material.setId(nextId());
+        material = repo.save(material);
 
-        return partner;
+        return material;
     }
 }

@@ -31,6 +31,7 @@ public class PlantProcessor {
                         return null;
                     }
                 })
+                .selectKey( (k,v) -> v.getPlantId() )
 
                 .peek( (k,v) -> print("-1-" + v));
     }

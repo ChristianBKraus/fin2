@@ -30,6 +30,7 @@ public class SalesOrganisationProcessor {
                         return null;
                     }
                 })
+                .selectKey( (k,v) -> v.getSalesOrganisationId() )
 
                 .peek( (k,v) -> print("-1-" + v));
     }

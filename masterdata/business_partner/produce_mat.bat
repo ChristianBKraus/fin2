@@ -1,0 +1,1 @@
+docker exec -it fin2 /opt/kafka/bin/kafka-console-producer.sh --broker-list 127.0.0.1:9092 --topic input_mat

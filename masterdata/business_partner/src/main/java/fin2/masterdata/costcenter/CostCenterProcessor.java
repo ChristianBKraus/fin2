@@ -1,7 +1,6 @@
-package fin2.masterdata.businesspartner;
+package fin2.masterdata.costcenter;
 
 import fin2.model.*;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -10,22 +9,20 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-public class BusinessPartnerProcessor {
+public class CostCenterProcessor {
     @Autowired
-    BusinessPartnerService service;
+    CostCenterService service;
 
     @Bean
-    public Function<KStream<String, String>, KStream<String, BusinessPartner>> processBusinessPartner() {
+    public Function<KStream<String, String>, KStream<String, CostCenter>> processCostCenter() {
 
         return input -> input
                 .peek( (k,v) -> print("-2-" + v))
 
                 .mapValues( (k,v) -> {
                     try {
-                        return service.post(BusinessPartner.builder()
+                        return service.post(CostCenter.builder()
                                 .name(v)
-                                .creditRating("0")
-                                .paymentTerms(10)
                                 .build());
                     } catch (Exception e) {
                         e.printStackTrace();

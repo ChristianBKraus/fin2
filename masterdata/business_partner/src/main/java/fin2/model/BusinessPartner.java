@@ -11,6 +11,6 @@ public class BusinessPartner {
     @Id
     String id;
     String name;
-    String creditRating; //TODO
-    String paymentTerms; //TODO
+    String creditRating;
+    long paymentTerms;
 }

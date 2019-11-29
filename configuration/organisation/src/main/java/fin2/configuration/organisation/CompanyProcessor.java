@@ -32,6 +32,7 @@ public class CompanyProcessor {
                         return null;
                     }
                 })
+                .selectKey( (k,v) -> v.getCompanyCode() )
 
                 .peek( (k,v) -> print("-1-" + v));
     }

@@ -9,23 +9,21 @@ import java.util.List;
 @RequestMapping(path = BusinessPartnerController.PATH)
 @RestController
 public class BusinessPartnerController {
-    static final String PATH = "/api";
+    static final String PATH = "/api/business_partner";
 
+    @Autowired
+    BusinessPartnerRepo repo;
     @Autowired
     BusinessPartnerService service;
 
-    // ---- BusinessPartner
-    @Autowired
-    BusinessPartnerRepo partnerRepo;
 
-    @GetMapping("/business_partner")
-    public List<BusinessPartner> getBusinessPartners() {
-        return partnerRepo.findAll();
+    @GetMapping("")
+    public List<BusinessPartner> getAll() {
+        return repo.findAll();
     }
 
-    @PostMapping("/business_partner")
-    public BusinessPartner postBusinessPartner(
-            @RequestBody BusinessPartner partner )  {
+    @PostMapping("")
+    public BusinessPartner post(@RequestBody BusinessPartner partner )  {
         return service.post(partner);
     }
 }

@@ -1,14 +1,26 @@
-server.port: 8085
+server.port: 8086
+spring.cloud.function.definition: processBusinessPartner;processCostCenter;processMaterial
 spring.cloud.stream:
+  kafka.streams.bindings:
+    processBusinessPartner_in.applicationId: Fin2Masterdata_BusinessPartner
+    processCostCenter_in.applicationId: Fin2Masterdata_CostCenter
+    processMaterial_in.applicationId: Fin2Masterdata_Material
   bindings:
-    process-in-0:
+    processBusinessPartner-in-0:
       destination: input_bp
-    process-out-0:
+    processBusinessPartner-out-0:
       destination: BusinessPartner
+    processCostCenter-in-0:
+      destination: input_cc
+    processCostCenter-out-0:
+      destination: CostCenter
+    processMaterial-in-0:
+      destination: input_mat
+    processMaterial-out-0:
+      destination: Material
   kafka:
     streams:
       binder:
-        applicationId: Fin2MasterDataBusinessPartner
         configuration:
           commit.interval.ms: 100
           default:

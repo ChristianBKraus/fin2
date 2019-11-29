@@ -1,11 +1,12 @@
-package fin2.masterdata.businesspartner;
+package fin2.masterdata.costcenter;
 
+import fin2.masterdata.businesspartner.*;
 import fin2.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class BusinessPartnerService {
+class CostCenterService {
     private static long nextId;
     private String nextId() {
         nextId++;
@@ -13,14 +14,14 @@ class BusinessPartnerService {
     }
 
     @Autowired
-    BusinessPartnerRepo repo;
+    CostCenterRepo repo;
 
 
-    BusinessPartner post(BusinessPartner partner)  {
+    CostCenter post(CostCenter costcenter)  {
 
-        partner.setId(nextId());
-        partner = repo.save(partner);
+        costcenter.setId(nextId());
+        costcenter = repo.save(costcenter);
 
-        return partner;
+        return costcenter;
     }
 }
