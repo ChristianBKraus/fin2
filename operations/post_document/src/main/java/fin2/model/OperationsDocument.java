@@ -16,6 +16,5 @@ public class OperationsDocument {
     String documentType;
     String postingDate;
 
-
     List<OperationsDocumentItem> items;
 }

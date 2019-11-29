@@ -1,19 +1,18 @@
 package fin2.masterdata.businesspartner;
 
-import fin2.configuration.organisation.repo.BusinessPartnerRepo;
 import fin2.model.BusinessPartner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping(path = Controller.PATH)
+@RequestMapping(path = BusinessPartnerController.PATH)
 @RestController
-public class Controller {
+public class BusinessPartnerController {
     static final String PATH = "/api";
 
     @Autowired
-    Service service;
+    BusinessPartnerService service;
 
     // ---- BusinessPartner
     @Autowired

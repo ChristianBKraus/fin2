@@ -1,4 +1,4 @@
-package fin2.configuration.organisation;
+package fin2.masterdata.businesspartner;
 
 import fin2.model.*;
 import org.apache.kafka.streams.KeyValue;
@@ -9,22 +9,21 @@ import org.springframework.stereotype.Component;
 import java.util.function.Function;
 
 @Component
-public class Processor {
+public class BusinessPartnerProcessor {
     @Bean
-    public Function<KStream<String, String>, KStream<String, SalesOrganisation>> process() {
+    public Function<KStream<String, String>, KStream<String, BusinessPartner>> process() {
 
         return input -> input
                 .peek( (key,value) -> System.out.println( value ))
 
                 .map( (key, value) -> {
 
-                    SalesOrganisation org = SalesOrganisation.builder()
-                            .salesOrganisationId(nextId())
+                    BusinessPartner partner = BusinessPartner.builder()
+                            .id(nextId())
                             .name(value)
-                            .companyCode("0001")
                             .build();
 
-                        return getKeyValue(org);
+                        return getKeyValue(partner);
                     } )
 
                 .peek( (key,value) -> System.out.println( "-- " + value ));
@@ -35,8 +34,8 @@ public class Processor {
         nextId++;
         return String.format("%d",nextId);
     }
-    private KeyValue<String,SalesOrganisation> getKeyValue(SalesOrganisation org) {
-        return new KeyValue<>(org.getSalesOrganisationId(),org);
+    private KeyValue<String,BusinessPartner> getKeyValue(BusinessPartner partner) {
+        return new KeyValue<>(partner.getId(),partner);
     }
 
 }

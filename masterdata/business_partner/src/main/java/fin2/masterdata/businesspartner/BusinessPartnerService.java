@@ -1,12 +1,11 @@
 package fin2.masterdata.businesspartner;
 
-import fin2.configuration.organisation.repo.BusinessPartnerRepo;
 import fin2.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class Service {
+class BusinessPartnerService {
     private static long nextId;
     private String nextId() {
         nextId++;

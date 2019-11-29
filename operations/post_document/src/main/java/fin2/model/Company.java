@@ -1,14 +1,9 @@
 package fin2.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import lombok.*;
 
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
 public class Company {
-    @Id
     String companyCode;
     String name;
     String companyCodeCurrency; //TODO
