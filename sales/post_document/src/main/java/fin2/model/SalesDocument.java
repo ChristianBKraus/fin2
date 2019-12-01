@@ -1,13 +1,9 @@
 package fin2.model;
 
-import fin2.serdes.SalesDocumentSerdes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.kafka.common.serialization.Serdes;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
-import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.List;
 
@@ -19,7 +15,11 @@ public class SalesDocument {
     String customerId;
     String salesOrganisationId;
     String companyCode;
-    String currency;
 
+    long numberOfItems;
     List<SalesDocumentItem> items;
+
+    public void addItem(SalesDocumentItem item) {
+        items.add(item);
+    }
 }

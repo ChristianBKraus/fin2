@@ -9,7 +9,13 @@ import lombok.NoArgsConstructor;
 public class SalesDocumentItem {
     String salesDocumentLine;
 
-    String product;
+    String materialId;
+
+    long quantity;
+    String unitOfMeasure;
 
     long amount;
+    String currency;
+
+    SalesDocument header;
 }

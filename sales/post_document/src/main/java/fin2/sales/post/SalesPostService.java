@@ -1,5 +1,6 @@
 package fin2.sales.post;
 
+import fin2.model.Material;
 import fin2.model.SalesDocument;
 import fin2.model.SalesDocumentItem;
 import fin2.model.SalesOrganisation;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-class ProcessorService {
+class SalesPostService {
 
     private static long nextId = 0L;
     private String nextId() {
@@ -22,25 +23,37 @@ class ProcessorService {
     }
 
     SalesDocument create(String input) {
+        long quantity = Long.parseLong(input);
+
         List<SalesDocumentItem> items = new ArrayList<>();
         items.add( SalesDocumentItem.builder()
                 .salesDocumentLine(line(1))
-                .product(input)
-                .amount(100L)
+                .materialId("1")
+                .quantity(quantity)
+                .unitOfMeasure("kg")
                 .build() );
-        return SalesDocument.builder()
+        SalesDocument header = SalesDocument.builder()
                 .salesDocumentId(nextId())
                 .documentDate(Instant.now().toString().substring(0,10))
-                .customerId("Customer")
+                .customerId("1")
                 .salesOrganisationId("1")
-                .currency("EUR")
                 .items(items)
                 .build();
+        for (SalesDocumentItem item : header.getItems()) {
+            item.setHeader(header);
+        }
+        return header;
     }
 
     SalesDocument enrichBy(SalesDocument doc, SalesOrganisation org) {
         doc.setCompanyCode(org.getCompanyCode());
         return doc;
+    }
+
+    SalesDocumentItem enrichBy(SalesDocumentItem item, Material mat) {
+        item.setCurrency( mat.getCurrency() );
+        item.setAmount( item.getQuantity() * mat.getPrice() );
+        return item;
     }
 
 }

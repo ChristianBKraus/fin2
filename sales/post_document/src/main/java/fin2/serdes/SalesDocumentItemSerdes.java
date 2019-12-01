@@ -1,13 +1,13 @@
 package fin2.serdes;
 
 import fin2.model.SalesDocument;
-import org.apache.kafka.common.serialization.Serde;
+import fin2.model.SalesDocumentItem;
 import org.apache.kafka.common.serialization.Serdes;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
-public class SalesDocumentSerdes
-        extends Serdes.WrapperSerde<SalesDocument>
+public class SalesDocumentItemSerdes
+        extends Serdes.WrapperSerde<SalesDocumentItem>
         {
-    public SalesDocumentSerdes() { super( new JsonSerializer<>(), new JsonDeserializer<>(SalesDocument.class)); }
+    public SalesDocumentItemSerdes() { super( new JsonSerializer<>(), new JsonDeserializer<>(SalesDocumentItem.class)); }
 }
