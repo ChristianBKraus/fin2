@@ -1,12 +1,13 @@
 package fin2.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class SalesDocumentItem {
+@EqualsAndHashCode(callSuper = true)
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class SalesDocumentItem extends HasHeader<SalesDocument> {
     String salesDocumentLine;
 
     String materialId;
@@ -16,6 +17,4 @@ public class SalesDocumentItem {
 
     long amount;
     String currency;
-
-    SalesDocument header;
 }

@@ -37,10 +37,10 @@ class SalesPostService {
                 .documentDate(Instant.now().toString().substring(0,10))
                 .customerId("1")
                 .salesOrganisationId("1")
-                .items(items)
                 .build();
+        header.setItems(items);
         for (SalesDocumentItem item : header.getItems()) {
-            item.setHeader(header);
+            item.provideHeader(header);
         }
         return header;
     }

@@ -1,15 +1,25 @@
 package fin2.sales.post;
 
-import fin2.model.*;
-import fin2.serdes.*;
+import fin2.model.Material;
+import fin2.model.SalesDocument;
+import fin2.model.SalesDocumentItem;
+import fin2.model.SalesOrganisation;
+import fin2.serdes.MaterialSerdes;
+import fin2.serdes.SalesDocumentItemSerdes;
+import fin2.serdes.SalesDocumentSerdes;
+import fin2.serdes.SalesOrganisationSerdes;
+import lombok.var;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.kstream.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.cloud.stream.annotation.*;
+import org.apache.kafka.streams.kstream.Joined;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.annotation.Input;
+import org.springframework.cloud.stream.annotation.Output;
+import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 
 @Component
 @EnableBinding(ISalesPostProcessor.class)
@@ -25,7 +35,7 @@ public class SalesPostProcessor {
             @Input(ISalesPostProcessor.SALES_ORGANISATION) KTable<String,SalesOrganisation> organisation,
             @Input(ISalesPostProcessor.MATERIAL) KTable<String,Material> material) {
 
-            return input
+            KStream<String,SalesDocumentItem> items = input
                 .peek( (k,v) -> print("-0-"+v) )
 
                 // Create SalesOrder from ProductString
@@ -40,34 +50,17 @@ public class SalesPostProcessor {
                 )
 
                 // Enrich every line with Material
-                // Transform to Item Level
                 .flatMapValues( (k,v) -> v.getItems() )
-                // Join with Material
                 .selectKey( (k,v) -> v.getMaterialId() )
                 .join(material, (i,m) -> service.enrichBy(i,m)
                         , Joined.with(Serdes.String(), new SalesDocumentItemSerdes(), new MaterialSerdes() )
-                )
+                );
                 // group by Header and aggregate
-                .selectKey( (k,v) -> v.getHeader().getSalesDocumentId() )
-
-                .groupByKey()
-                .aggregate(
-                    SalesDocument::new,
-                    (key,item,header) -> {
-                        if (header.getSalesDocumentId() == null) {
-                            header = item.getHeader();
-                            header.setItems(new ArrayList<>());
-                        }
-                        header.addItem(item);
-                        return header;
-                    },
-                    Materialized.as("SalesPostEnrichMaterial") )
-                .toStream()
-                // only pass when all items processed
-                .filter( (k,v) -> v.getItems().size() == v.getNumberOfItems() )
-
+            var collected =
+                    new ItemCollector<SalesDocument,SalesDocumentItem>()
+                            .collect(items, SalesDocument::getSalesDocumentId, "SalesPostMaterial");
+            return collected
                 .peek( (k,v) -> print("-2-"+v) );
-
     }
 
     private void print(String s) {

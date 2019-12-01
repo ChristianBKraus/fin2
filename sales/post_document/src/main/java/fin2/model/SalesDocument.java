@@ -1,14 +1,13 @@
 package fin2.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data @Builder @AllArgsConstructor @NoArgsConstructor
-public class SalesDocument {
+public class SalesDocument extends HasItems<SalesDocumentItem> {
     String salesDocumentId;
 
     String documentDate;
@@ -16,10 +15,4 @@ public class SalesDocument {
     String salesOrganisationId;
     String companyCode;
 
-    long numberOfItems;
-    List<SalesDocumentItem> items;
-
-    public void addItem(SalesDocumentItem item) {
-        items.add(item);
-    }
 }
