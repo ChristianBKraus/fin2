@@ -1,26 +1,18 @@
-server.port: 8085
-spring.cloud.function.definition: processSalesOrganisation;processPlant;processCompany
+server.port: 8002
 spring.cloud.stream:
-  kafka.streams.bindings:
-    processSalesOrganisation_in.applicationId: Fin2ConfigurationOrganisation_SalesOrganistation
-    processCompany_in.applicationId: Fin2ConfigurationOrganisation_Company
-    processPlant_in.applicationId: Fin2ConfigurationOrganisation_Plant
+  poller.maxMessagesPerPoll: 100
+  function.definition: loadPlant;loadCompany;loadSalesOrganisation
   bindings:
-    processSalesOrganisation-in-0:
-      destination: input_org
-    processSalesOrganisation-out-0:
-      destination: SalesOrganisation
-    processCompany-in-0:
-      destination: input_company
-    processCompany-out-0:
+    loadCompany-out-0:
       destination: Company
-    processPlant-in-0:
-      destination: input_plant
-    processPlantSalesOrganisation-out-0:
+    loadPlant-out-0:
       destination: Plant
+    loadSalesOrganisation-out-0:
+      destination: SalesOrganisation
   kafka:
     streams:
       binder:
+        applicationId: Fin2Configuration_Organisation
         configuration:
           commit.interval.ms: 100
           default:

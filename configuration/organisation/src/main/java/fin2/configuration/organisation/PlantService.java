@@ -1,11 +1,11 @@
 package fin2.configuration.organisation;
-
+import fin2.configuration.SubVal;
 import fin2.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class PlantService {
+class PlantService implements SubVal<Plant> {
     private static long nextId;
     private String nextId() {
         nextId++;
@@ -18,18 +18,18 @@ class PlantService {
     @Autowired
     CompanyRepo companyRepo;
 
-    Plant post(Plant plant) throws Exception {
+    public Plant subVal(Plant plant, boolean change) throws Exception {
 
-        if (repo.findByName(plant.getName()) != null)  {
-            throw new Exception("Plant with name does already exist");
+        if ( !change ) {
+            if (repo.findByName(plant.getName()) != null) {
+                throw new Exception("Plant with name does already exist");
+            }
         }
         if (! companyRepo.findById(plant.getCompanyCode()).isPresent()) {
             throw new Exception("Company Code does not exist");
         }
 
         plant.setPlantId(nextId());
-
-        plant = repo.save(plant);
 
         return plant;
 

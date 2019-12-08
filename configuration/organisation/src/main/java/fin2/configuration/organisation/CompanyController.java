@@ -1,5 +1,5 @@
 package fin2.configuration.organisation;
-
+/*
 import fin2.model.Company;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,8 @@ public class CompanyController {
 
     @PostMapping("")
     public Company post(@RequestBody Company company ) throws Exception {
-        return service.post(company);
+        return repo.save(service.post(company,false));
     }
 
 }
+*/
